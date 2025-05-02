@@ -1,5 +1,6 @@
 #include "stdbool.h"
 #include "AnimData.h"
+#include "../textures/Laeva.h"
 #include <raylib.h>
 
 // From "main.c"
@@ -15,7 +16,9 @@ static const int laevasAmount = 6;
 
 void LoadLaevas(void)
 {
-    laevaTexture = LoadTexture("textures/LAEVA.png");
+    Image laevaImage = LoadImageFromMemory(".png", Laeva_data, Laeva_size);
+    laevaTexture = LoadTextureFromImage(laevaImage);
+    UnloadImage(laevaImage);
     int laevaDist = 100;
     laevas = (AnimData*)MemAlloc(sizeof(AnimData) * laevasAmount);
     for (int i = 0; i < laevasAmount; i++)

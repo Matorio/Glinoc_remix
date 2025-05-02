@@ -11,6 +11,7 @@ Modified by Matorio
 #include <raymath.h> // Lerp
 #include "AnimData.h"
 #include "GameplayScene.h"
+#include "../textures/Dino.h"
 
 extern const int windowWidth = 1280;
 extern const int windowHeight = 720;
@@ -37,9 +38,11 @@ int main()
     RenderTexture2D renderTexture = LoadRenderTexture(windowWidth, windowHeight);
     //Sounds
     InitAudioDevice();
-    
-    //Textures Dino    
-    Texture2D Dino = LoadTexture("textures/dino.png");
+
+    //Textures Dino
+    Image dinoImage = LoadImageFromMemory(".png", Dino_data, Dino_size);
+    Texture2D Dino = LoadTextureFromImage(dinoImage);
+    UnloadImage(dinoImage);
     dinoAnimData.texture = Dino;
     dinoAnimData.rec.width = Dino.width/4;
     dinoAnimData.rec.height = Dino.height;
