@@ -27,7 +27,7 @@ static bool IsOnGround(AnimData data)
 
 void LoadDino(void)
 {
-    jumpSound = LoadSound("Sounds/jump.wav");
+    jumpSound = LoadSound("Sounds/jump.mp3");
 }
 
 void UpdateDino(void)
