@@ -1,7 +1,6 @@
 #include <raylib.h>
 #include "AnimData.h"
 #include <stdbool.h>
-#include "../Sounds/JumpSound.h"
 
 //Dino Is ducking
 static bool isDuck = false;
@@ -28,7 +27,7 @@ static bool IsOnGround(AnimData data)
 
 void LoadDino(void)
 {
-    jumpSound = LoadSound("Sounds/jump.mp3");
+    jumpSound = LoadSound("Sounds/jump.wav");
 }
 
 void UpdateDino(void)
@@ -73,7 +72,6 @@ void UpdateDino(void)
     {
         Dino_velocity -= jump_hight;
         PlaySound(jumpSound);
-	isDuck = false;
     }
 
     dinoAnimData.pos.y += Dino_velocity * dt;

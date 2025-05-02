@@ -7,11 +7,6 @@
 #include "Dino.h"
 #include "ControlDraw.h"
 
-#include "../Sounds/HurtSound.h"
-#include "../Sounds/PickupCoinSound.h"
-#include "../Sounds/PixelKingSong.h"
-#include "../textures/YellowWatermelon.h"
-
 // From "main.c"
 extern bool musicOn;
 // From "main.c"
@@ -35,12 +30,11 @@ static int melonDist;
 
 static bool alive = true;
 
-static Sound* melonPickUpSound;
-static Sound* killSound;
-static Music* PixelKingMusic;
+static Sound JumpSound;
+static Sound melonPickUpSound;
+static Sound killSound;
+static Music PixelKingMusic;
 
-static void LoadAudio(void);
-static void UnloadAudio(void);
 static void LoadMelons(void);
 static void DrawAliveScene(void);
 static void DrawDeadScene(void);
@@ -52,33 +46,17 @@ void StartGameplayScene(void)
     LoadMelons();
     LoadEnvironment();
     LoadDino();
-
-    LoadAudio();
-}
-
-void LoadAudio()
-{
-    killSound = (Sound*)MemAlloc(sizeof(Sound));
-    Wave wave = LoadWaveFromMemory(".wav", HurtSound_data, HurtSound_size);
-    (*killSound) = LoadSoundFromWave(wave);
-    UnloadWave(wave);
-
-    melonPickUpSound = (Sound*)MemAlloc(sizeof(Sound));
-    wave = LoadWaveFromMemory(".wav", PickupCoinSound_data, PickupCoinSound_size);
-    (*melonPickUpSound) = LoadSoundFromWave(wave);
-    UnloadWave(wave);
-
-    PixelKingMusic = (Music*)MemAlloc(sizeof(Music));
-    (*PixelKingMusic) = LoadMusicStreamFromMemory(".mp3", PixelKingSong_data, PixelKingSong_size);
-    PixelKingMusic->looping = true;
-    PlayMusicStream(*PixelKingMusic);
+    
+    melonPickUpSound = LoadSound("Sounds/pickupCoin.wav");
+    killSound = LoadSound("Sounds/hitHurt.wav");
+    PixelKingMusic = LoadMusicStream("Sounds/Pixel-Kings.mp3");
+    PixelKingMusic.looping = true;
+    PlayMusicStream(PixelKingMusic);
 }
 
 void LoadMelons(void)
 {
-    Image melonImage = LoadImageFromMemory(".png", YellowWatermelon_data, YellowWatermelon_size);
-    melonTexture = LoadTextureFromImage(melonImage);
-    UnloadImage(melonImage);
+    melonTexture = LoadTexture("textures/Yellow Watermelon glow.png");
     melonDist = 1000;
 
     melons = (AnimData*)MemAlloc(sizeof(AnimData) * melonsAmount);
@@ -107,8 +85,8 @@ void UpdateGameplayScene(void)
     if(CheckLaevaCollision(dinoAnimData) && !DinoIsDuck())
     {
         alive = false;
-        PlaySound(*killSound);
-        StopMusicStream(*PixelKingMusic);
+        PlaySound(killSound);
+        StopMusicStream(PixelKingMusic);
     }
 
     for (int i = 0; i < melonsAmount; i++)
@@ -133,7 +111,7 @@ void UpdateGameplayScene(void)
         
         if (CheckCollisionRecs(MelonRec, dinoRec))
         {
-            PlaySound(*melonPickUpSound);
+            PlaySound(melonPickUpSound);
             pointNum += 10;
             melons[i].pos.x = windowWidth + GetRandomValue(2000,20000);
         }
@@ -142,7 +120,7 @@ void UpdateGameplayScene(void)
     //Music Logic
     if (musicOn)
     {
-        UpdateMusicStream(*PixelKingMusic);
+        UpdateMusicStream(PixelKingMusic);
     }
 
     float dt = GetFrameTime();
@@ -247,7 +225,7 @@ void DrawDeadScene(void)
         ObjectSpeed = 300;
         ResetEnvironmentSpeed();
         alive = true;
-        PlayMusicStream(*PixelKingMusic);
+        PlayMusicStream(PixelKingMusic);
     }
 }
 
@@ -258,15 +236,8 @@ void EndGameplayScene(void)
     UnloadLaevas();
     UnloadEnvironment();
     UnloadDino();
-    UnloadAudio();
-}
-
-void UnloadAudio()
-{
-    UnloadSound(*killSound);
-    MemFree(killSound);
-    UnloadSound(*melonPickUpSound);
-    MemFree(melonPickUpSound);
-    UnloadMusicStream(*PixelKingMusic);
-    MemFree(PixelKingMusic);
+    UnloadSound(JumpSound);
+    UnloadSound(melonPickUpSound);
+    UnloadSound(killSound);
+    UnloadMusicStream(PixelKingMusic);
 }

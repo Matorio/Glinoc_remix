@@ -1,8 +1,4 @@
 #include <raylib.h>
-#include "../textures/Mountain.h"
-#include "../textures/Birds.h"
-#include "../textures/TreesFront.h"
-#include "../textures/TreesBack.h"
 
 typedef struct ObjectData
 {
@@ -25,9 +21,7 @@ static void UpdateTreesFront(float);
 
 void LoadEnvironment(void)
 {
-    Image mountainImage = LoadImageFromMemory(".png", Mountain_data, Mountain_size);
-    Texture2D mountainTexture = LoadTextureFromImage(mountainImage);
-    UnloadImage(mountainImage);
+    Texture2D mountainTexture = LoadTexture("textures/mountain.png");
     mountainData.texture = mountainTexture;
     mountainData.position = (Vector2){ 0, 0 };
     mountainData.movementSpeed = 30;
@@ -36,21 +30,15 @@ void LoadEnvironment(void)
     mountainData2.position = (Vector2){ (float)GetScreenWidth(), 0 };
     mountainData2.movementSpeed = 30;
 
-    Image birdsImage = LoadImageFromMemory(".png", Birds_data, Birds_size);
-    birdsData.texture = LoadTextureFromImage(birdsImage);
-    UnloadImage(birdsImage);
+    birdsData.texture = LoadTexture("textures/birds.png");
     birdsData.position = (Vector2){ 0, 0 };
     birdsData.movementSpeed = 20;
 
-    Image treesImage = LoadImageFromMemory(".png", TreesBack_data, TreesBack_size);
-    treesBack.texture = LoadTextureFromImage(treesImage);
-    UnloadImage(treesImage);
+    treesBack.texture = LoadTexture("textures/treesBack.png");
     treesBack.position = (Vector2){ (float)treesBack.texture.width, 0 };
     treesBack.movementSpeed = 70;
 
-    treesImage = LoadImageFromMemory(".png", TreesFront_data, TreesFront_size);
-    treesFront.texture = LoadTextureFromImage(treesImage);
-    UnloadImage(treesImage);
+    treesFront.texture = LoadTexture("textures/treesFront.png");
     treesFront.position = (Vector2){ (float)treesFront.texture.width, 0 };
     treesFront.movementSpeed = 100; // Unused
 
